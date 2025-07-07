@@ -1,6 +1,7 @@
 services:
   pentaho-server:
     image: oliveiha/pentaho-server:9.4.6_openjdk8
+    platform: linux/amd64         # ⬅️ Tambahkan ini untuk mendukung Mac M1/M2
     container_name: pentaho-server
     ports:
       - "8080:8080"
@@ -20,6 +21,7 @@ services:
 
   db:
     image: postgres:14-alpine
+    platform: linux/amd64         # ⬅️ Tambahkan ini juga untuk database agar aman
     container_name: pentaho-db
     environment:
       POSTGRES_USER: postgres
