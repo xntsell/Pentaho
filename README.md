@@ -1,17 +1,3 @@
-# 🚀 Pentaho Server (Community Edition) with Docker
-
-Menjalankan **Pentaho BI Server CE 9.4.6** secara lokal menggunakan **Docker** dan **PostgreSQL** sebagai metadata repository.
-
----
-
-## 📦 Kebutuhan
-
-- Docker
-- Docker Compose
-- Koneksi internet (untuk menarik image pertama kali)
-
----
-
 ## ▶️ Cara Menjalankan# 🚀 Pentaho Server (Community Edition) with Docker
 
 Menjalankan **Pentaho BI Server CE 9.4.6** secara lokal menggunakan **Docker** dan **PostgreSQL** sebagai metadata repository.
@@ -36,7 +22,9 @@ docker compose up -d -- build
 
 ## 🤗 for Mac
 
-kalau muncul peringatan seperti  ! pentaho-server The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested 0.0s
+kalau muncul peringatan seperti  
+! pentaho-server The requested image's platform (linux/amd64) does not match the detected host platform (linux/arm64/v8) and no specific platform was requested 0.0s
+
 artinya kamu menjalankan Docker di Mac M1/M2 (chip ARM64), tapi image pentaho-server menggunakan platform amd64. Docker bisa tetap menjalankannya lewat emulasi (qemu), tapi bisa lambat atau bermasalah tergantung image-nya.
 
 Ganti docker-compose.yml seperti berikut:
