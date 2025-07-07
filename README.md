@@ -84,14 +84,10 @@ Akses aplikasi:
 🌐 http://localhost:8080/pentaho
 
 Login default:
-Username: admin
-Password: password
 
-📂 Penjelasan Folder
-Folder	Fungsi
-pentaho/solution/	Tempat menyimpan file dashboard/report Pentaho
-postgres/data/	Volume data untuk PostgreSQL (metadata repository)
-logs/	Menyimpan log dari Pentaho Server
+Username: admin
+
+Password: password
 
 🧼 Menghentikan Server
 ```bash
@@ -99,33 +95,3 @@ docker compose down
 ```
 👨‍💻 Author
 Chrisella inspirate with Elfan Pradita
-
-Masuk ke folder:
-
-```bash
-cd pentaho-docker
-docker compose up -d
-
-Akses aplikasi:
-
-🌐 http://localhost:8080/pentaho
-
-Login default:
-
-Username: admin
-
-Password: password
-
-📂 Penjelasan Folder
-Folder	Fungsi
-pentaho/solution/	Tempat menyimpan file dashboard/report Pentaho
-postgres/data/	Volume data untuk PostgreSQL (metadata repository)
-logs/	Menyimpan log dari Pentaho Server
-
-🧼 Menghentikan Server
-bash
-Copy
-Edit
-docker compose down
-👨‍💻 Author
-Built with ❤️ by Elfan Pradita
