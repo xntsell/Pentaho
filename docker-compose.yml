@@ -1,0 +1,30 @@
+services:
+  pentaho-server:
+    image: oliveiha/pentaho-server:9.4.6_openjdk8
+    container_name: pentaho-server
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: db
+      DB_USER: postgres
+      DB_PASS: password
+      DB_PORT: 5432
+      TIMEZONE: "Asia/Jakarta"
+      LOCALE: "en_US.UTF-8 UTF-8"
+    volumes:
+      - ./pentaho/solution:/opt/pentaho/pentaho-server/pentaho-solutions
+      - ./logs:/opt/pentaho/pentaho-server/logs
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: postgres:14-alpine
+    container_name: pentaho-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: pentaho
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+    restart: unless-stopped
