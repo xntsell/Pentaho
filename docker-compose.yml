@@ -1,12 +1,13 @@
 services:
   pentaho-server:
     image: oliveiha/pentaho-server:9.4.6_openjdk8
-    platform: linux/amd64         # ⬅️ Tambahkan ini untuk mendukung Mac M1/M2
+    platform: linux/amd64
     container_name: pentaho-server
     ports:
       - "8080:8080"
     environment:
-      DB_HOST: db
+      DB_HOST: db          # PostgreSQL (default)
+      MYSQL_HOST: mysql    # Tambahkan ini untuk MySQL
       DB_USER: postgres
       DB_PASS: password
       DB_PORT: 5432
@@ -17,11 +18,12 @@ services:
       - ./logs:/opt/pentaho/pentaho-server/logs
     depends_on:
       - db
+      - mysql             # Tambahkan dependency ke MySQL
     restart: unless-stopped
 
   db:
     image: postgres:14-alpine
-    platform: linux/amd64         # ⬅️ Tambahkan ini juga untuk database agar aman
+    platform: linux/amd64
     container_name: pentaho-db
     environment:
       POSTGRES_USER: postgres
@@ -29,4 +31,19 @@ services:
       POSTGRES_DB: pentaho
     volumes:
       - ./postgres/data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0
+    platform: linux/amd64
+    container_name: pentaho-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: pentaho_mysql
+      MYSQL_USER: pentaho
+      MYSQL_PASSWORD: pentahopass
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    ports:
+      - "3306:3306"
     restart: unless-stopped

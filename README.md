@@ -1,4 +1,4 @@
-## ▶️ Cara Menjalankan# 🚀 Pentaho Server (Community Edition) with Docker
+## ▶️ Cara Menjalankan 🚀 Pentaho Server (Community Edition) with Docker
 
 Menjalankan **Pentaho BI Server CE 9.4.6** secara lokal menggunakan **Docker** dan **PostgreSQL** sebagai metadata repository.
 
@@ -12,6 +12,21 @@ Menjalankan **Pentaho BI Server CE 9.4.6** secara lokal menggunakan **Docker** d
 
 ---
 
+## 📂 Struktur Proyek
+```
+.
+├── docker-compose.yml          # Konfigurasi utama
+├── postgres/
+│   └── data/                  # Data persisten PostgreSQL
+├── pentaho/
+│   ├── solution/              # Direktori solusi Pentaho
+│   └── logs/                  # Log server Pentaho
+└── mysql/
+    └── data/                  # Data persisten MySQL
+```
+
+---
+
 ## ▶️ Cara Menjalankan
 
 Masuk ke folder:
@@ -19,6 +34,7 @@ Masuk ke folder:
 cd Pentaho
 docker compose up -d -- build
 ```
+---
 
 ## 🤗 for Mac
 
@@ -72,14 +88,122 @@ Akses aplikasi:
 🌐 http://localhost:8080/pentaho
 
 Login default:
-
 Username: admin
-
 Password: password
 
-🧼 Menghentikan Server
+---
+
+## 🧼 Menghentikan Server
 ```bash
 docker compose down
 ```
-👨‍💻 Author
+
+---
+
+## Mysql
+setting docker-compose.yml seperti berikut:
+```bash
+services:
+  pentaho-server:
+    image: oliveiha/pentaho-server:9.4.6_openjdk8
+    platform: linux/amd64
+    container_name: pentaho-server
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: db          # PostgreSQL (default)
+      MYSQL_HOST: mysql    # Tambahkan ini untuk MySQL
+      DB_USER: postgres
+      DB_PASS: password
+      DB_PORT: 5432
+      TIMEZONE: "Asia/Jakarta"
+      LOCALE: "en_US.UTF-8 UTF-8"
+    volumes:
+      - ./pentaho/solution:/opt/pentaho/pentaho-server/pentaho-solutions
+      - ./logs:/opt/pentaho/pentaho-server/logs
+    depends_on:
+      - db
+      - mysql             # Tambahkan dependency ke MySQL
+    restart: unless-stopped
+
+  db:
+    image: postgres:14-alpine
+    platform: linux/amd64
+    container_name: pentaho-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: pentaho
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0
+    platform: linux/amd64
+    container_name: pentaho-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: pentaho_mysql
+      MYSQL_USER: pentaho
+      MYSQL_PASSWORD: pentahopass
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+```
+
+kemudian jalankan ulang docker dengan
+```bash
+docker compose down
+docker compose up -d
+```
+
+## 🛠️ Configuration
+
+Database Connections
+```
+MySQL (Default)
+Host: mysql
+Port: 3306
+Database: pentaho_mysql
+User: pentaho / pentahopass
+```
+```
+PostgreSQL
+Host: db
+Port: 5432
+Database: pentaho
+User: postgres / password
+```
+
+---
+
+## 🔧 Troubleshooting
+Masalah Umum
+**1. "Connection failed" error**
+- Verifikasi container berjalan: docker ps
+- Cek log MySQL: docker logs pentaho-mysql
+- Pastikan driver terinstall:
+```bash
+docker cp mysql-connector-java-8.0.28.jar pentaho-server:/opt/pentaho/pentaho-server/tomcat/lib/
+docker-compose restart pentaho-server
+```
+
+**2. Database tidak dapat diakses**
+Tes koneksi MySQL
+```bash
+docker exec -it pentaho-mysql mysql -u pentaho -ppentahopass pentaho_mysql
+```
+
+---
+
+## 🧹 Pembersihan
+Untuk menghentikan dan menghapus semua container:
+```bash
+docker-compose down -v
+```
+
+#### 👨‍💻 Author
 Chrisella inspirate with Elfan Pradita
