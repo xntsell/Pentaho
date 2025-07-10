@@ -160,6 +160,8 @@ docker compose down
 docker compose up -d
 ```
 
+nyalakan xampp
+
 ## 🛠️ Configuration
 
 Database Connections
@@ -168,7 +170,7 @@ MySQL (Default)
 Host: mysql
 Port: 3306
 Database: pentaho_mysql
-User: pentaho / pentahopass
+User: root
 ```
 ```
 PostgreSQL
@@ -179,6 +181,42 @@ User: postgres / password
 ```
 
 ---
+
+## Menambahkan Data Source di Pentaho
+Navigasi ke Administration → Data Sources
+Untuk MySQL:
+```
+Nama Koneksi: MySQL_Docker
+Tipe: MySQL
+Host: mysql
+Database: pentaho_mysql
+user: admin
+Password: password
+``` 
+
+### Test Ping pentaho ke database
+pada terminal, masukan:
+```bash
+docker exec -it pentaho-server ping mysql
+```
+
+## Verif akhir
+buat tabel contoh MySQL:
+```
+USE pentaho_mysql;
+CREATE TABLE test (id INT, name VARCHAR(50));
+INSERT INTO test VALUES (1, 'Contoh Data');
+```
+
+Coba koneksi lagi di Pentaho dengan query:
+```bash
+SELECT * FROM test;
+```
+
+Jika gagal, cek log Pentaho:
+```bash
+docker logs pentaho-server | grep -i "mysql"
+```
 
 ## 🔧 Troubleshooting
 Masalah Umum
